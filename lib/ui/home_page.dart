@@ -104,8 +104,9 @@ class _HomeBody extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                         child: Image.file(
                           File(controller.selectedImage!.path),
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                           width: double.infinity,
+                          height: double.infinity,
                         ),
                       )
                     : const Center(

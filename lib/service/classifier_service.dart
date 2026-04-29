@@ -125,16 +125,22 @@ List<ClassificationResult> _runInference(Map<String, dynamic> args) {
 
   // --- Build output tensor & run ---
   List<double> scores;
+
   if (outputType.contains('uint8') || outputType.contains('int8')) {
-    final buf = Uint8List(numClasses);
-    interpreter.run(input, buf.reshape([1, numClasses]));
+    var output = List.generate(1, (i) => List.filled(numClasses, 0));
+
+    interpreter.run(input, output);
     interpreter.close();
-    scores = List.generate(numClasses, (i) => buf[i] / 255.0);
+    
+    scores = output[0].map((e) => e / 255.0).toList();
+
   } else {
-    final buf = Float32List(numClasses);
-    interpreter.run(input, buf.reshape([1, numClasses]));
+    var output = List.generate(1, (i) => List.filled(numClasses, 0.0));
+
+    interpreter.run(input, output);
     interpreter.close();
-    scores = List.generate(numClasses, (i) => buf[i].toDouble());
+    
+    scores = output[0];
   }
 
   // Return top-5
